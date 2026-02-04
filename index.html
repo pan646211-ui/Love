@@ -97,7 +97,7 @@
     justify-content: center;
     gap: 24px;
     min-height: 80px;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
   }
 
   /* ─── Yes button ─── */
@@ -123,6 +123,10 @@
     padding: 18px 44px;
     box-shadow: 0 6px 24px rgba(232,76,110,.35);
     min-width: 140px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
   }
   .btn-yes:hover {
     transform: scale(1.06);
@@ -330,7 +334,7 @@
     const yesPads      = [18, 22, 27, 33, 40, 48, 55, 62, 70, 78, 86];
     const yIdx = Math.min(noCount, yesFontSizes.length-1);
     yesBtn.style.fontSize  = yesFontSizes[yIdx] + 'rem';
-    yesBtn.style.padding   = yesPads[yIdx] + 'px ' + (yesPads[yIdx]*2.2) + 'px';
+    yesBtn.style.padding   = yesPads[yIdx] + 'px ' + yesPads[yIdx] + 'px';
 
     // shake no button a tiny bit
     noBtn.style.animation = 'none';
