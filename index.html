@@ -163,6 +163,29 @@
   }
   .celebrate.show { opacity: 1; pointer-events: all; }
 
+  .celebrate .celebration-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    z-index: 10;
+    position: relative;
+  }
+
+  .celebrate .celebration-video {
+    width: 280px;
+    height: auto;
+    border-radius: 24px;
+    box-shadow: 0 16px 48px rgba(44,26,30,.2), 0 4px 16px rgba(232,76,110,.15);
+    margin-bottom: 32px;
+    animation: videoIn .7s .2s cubic-bezier(.22,1,.36,1) both;
+    border: 4px solid rgba(255,255,255,.9);
+  }
+  @keyframes videoIn {
+    from { opacity:0; transform: scale(.85) translateY(30px); }
+    to   { opacity:1; transform: scale(1) translateY(0); }
+  }
+
   .celebrate .confetti-wrap {
     position: fixed; inset: 0; pointer-events: none; overflow: hidden;
   }
@@ -179,7 +202,7 @@
 
   .celebrate .big-heart {
     font-size: 100px;
-    animation: bigPulse .6s cubic-bezier(.22,1,.36,1) both;
+    animation: bigPulse .6s .9s cubic-bezier(.22,1,.36,1) both;
     filter: drop-shadow(0 8px 24px rgba(232,76,110,.4));
   }
   @keyframes bigPulse {
@@ -193,13 +216,13 @@
     font-size: clamp(2rem, 6vw, 3rem);
     color: var(--dark);
     margin-top: 24px;
-    animation: fadeSlide .5s .15s cubic-bezier(.22,1,.36,1) both;
+    animation: fadeSlide .5s 1.05s cubic-bezier(.22,1,.36,1) both;
   }
   .celebrate p {
     color: #9a7a80;
     font-size: 1.05rem;
     margin-top: 8px;
-    animation: fadeSlide .5s .3s cubic-bezier(.22,1,.36,1) both;
+    animation: fadeSlide .5s 1.2s cubic-bezier(.22,1,.36,1) both;
   }
   @keyframes fadeSlide {
     from { opacity:0; transform: translateY(16px); }
@@ -255,9 +278,16 @@
 <!-- celebration screen -->
 <div class="celebrate" id="celebrate">
   <div class="confetti-wrap" id="confettiWrap"></div>
-  <div class="big-heart">💝</div>
-  <h1>Yay! 🎉</h1>
-  <p>You said yes… my heart is full!</p>
+  
+  <div class="celebration-content">
+    <video class="celebration-video" id="celebVideo" loop muted playsinline style="display:none;">
+      <source src="celebration.mp4" type="video/mp4">
+    </video>
+    
+    <div class="big-heart">💝</div>
+    <h1>Yay! 🎉</h1>
+    <p>You said yes… my heart is full!</p>
+  </div>
 </div>
 
 <script>
@@ -333,6 +363,22 @@
   // ── Yes button logic ──
   function onYes(){
     document.getElementById('celebrate').classList.add('show');
+    
+    // Try to load and play video
+    const video = document.getElementById('celebVideo');
+    if(video){
+      video.style.display = 'block';
+      video.load();
+      // Play video with error handling
+      const playPromise = video.play();
+      if(playPromise !== undefined){
+        playPromise.catch(err => {
+          console.log('Video autoplay blocked:', err);
+          // Video failed, just continue with animation
+        });
+      }
+    }
+    
     launchConfetti();
     launchFloatingHearts();
   }
